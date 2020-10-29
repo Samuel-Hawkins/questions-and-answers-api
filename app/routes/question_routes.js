@@ -43,9 +43,23 @@ router.get('/questions', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+router.get('/questions/public', requireToken, (req, res, next) => {
+  Question.find()
+    .then(questions => {
+      // `questions` will be an array of Mongoose documents
+      // we want to convert each one to a POJO, so we use `.map` to
+      // apply `.toObject` to each one
+      return questions.map(question => question.toObject())
+    })
+    // respond with status 200 and JSON of the questions
+    .then(questions => res.status(200).json({ questions: questions }))
+    // if an error occurs, pass it to the handler
+    .catch(next)
+})
+
 // SHOW
 // GET /questions/5a7db6c74d55bc51bdf39793
-router.get('/questions/:id', requireToken, (req, res, next) => {
+router.get('/questions/public/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Question.findById(req.params.id)
     .then(handle404)
