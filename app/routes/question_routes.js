@@ -102,7 +102,6 @@ router.patch('/questions/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.question.owner
-  console.log(req.params.id)
 
   Question.findById(req.params.id)
     .then(handle404)
