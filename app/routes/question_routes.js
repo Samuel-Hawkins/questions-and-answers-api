@@ -43,7 +43,17 @@ router.get('/questions', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/questions/public', requireToken, (req, res, next) => {
+router.get('/questions/:id', requireToken, (req, res, next) => {
+  // req.params.id will be set based on the `:id` in the route
+  Question.findById(req.params.id)
+    .then(handle404)
+    // if `findById` is succesful, respond with 200 and "question" JSON
+    .then(question => res.status(200).json({ question: question.toObject() }))
+    // if an error occurs, pass it to the handler
+    .catch(next)
+})
+
+router.get('/questions-public', requireToken, (req, res, next) => {
   Question.find()
     .then(questions => {
       // `questions` will be an array of Mongoose documents
@@ -92,6 +102,7 @@ router.patch('/questions/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.question.owner
+  console.log(req.params.id)
 
   Question.findById(req.params.id)
     .then(handle404)

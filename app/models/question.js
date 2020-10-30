@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
 
+const commentSchema = new mongoose.Schema({
+  content: {
+    type: String,
+    required: true
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
+})
+
 const questionSchema = new mongoose.Schema({
   question: {
     type: String,
@@ -9,7 +20,7 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  comments: [],
+  comments: [commentSchema],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
